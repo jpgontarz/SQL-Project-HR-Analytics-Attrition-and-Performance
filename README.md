@@ -6,9 +6,12 @@ This project demonstrates my SQL problem-solving skills, analyzing employee perf
 
 ## Project Structure
 
-- [Business Problems](business-problems)
-- [About the Data](about-the-data)
-- [Data Cleaning](data-cleaning)
-- [Problems Solved](problems-solved)
-- [Insights and Recommendations](insights-and-recommendations)
+- [Business Problems](#business-problems)
+- [About the Data](#about-the-data)
+- [Data Cleaning](#data-cleaning)
+- [Problems Solved](#problems-solved)
+- [Insights and Recommendations](#insights-and-recommendations)
+
+## Business Problems
+
 
