@@ -20,6 +20,7 @@ The dataset includes five tables, capturing information regarding performance re
 
 ### 1. PerformanceRating
 
+Employees performance ratings.
 - PerformanceID: Unique identifier for each performance review.
 - EmployeeID: Unique identifier for the employee being reviewed.
 - ReviewDate: The date of the performance review.
@@ -34,6 +35,7 @@ The dataset includes five tables, capturing information regarding performance re
 
 ### 2. Employee
 
+General employee information.
 - EmployeeID: Unique identifier for each employee.
 - FirstName: The first name of the employee.
 - LastName: The last name of the employee.
@@ -57,17 +59,19 @@ The dataset includes five tables, capturing information regarding performance re
 
 ### 3. SatisfiedLevel
 
+Satisfaction level scale.
 - SatisfactionID: Unique identifier for the satisfaction level.
 - SatisfactionLevel: The level of satisfaction, ranging from "Very Dissatisfied" to "Very Satisfied."
 
 ### 4. RatingLevel
 
+Performance level scale.
 - RatingID: Unique identifier for the rating level.
 - RatingLevel: The performance rating, ranging from "Unacceptable" to "Above and Beyond."
 
 ### 5. EducationLevel
 
-Highest education level of employees.
+Education level scale.
 - EducationLevelID: Unique identifier for the education level.
 - EducationLevel: The level of education achieved, ranging from "No Formal Qualifications" to "Doctorate."
 
@@ -75,4 +79,25 @@ Highest education level of employees.
 
 Data cleaning is essential to ensure the dataset is accurate and useful for further analysis.
 
-### 1. 
+### 1. Missing/Null Values
+
+First, I checked to ensure there were no missing values from the data.
+```
+
+```
+
+
+### 2. Duplicates
+
+
+
+### 3. Standardization
+
+
+
+
+### 4. Errors/Incorrect Entries
+
+
+
+### 5. 
