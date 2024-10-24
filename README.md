@@ -82,9 +82,6 @@ Data cleaning is essential to ensure the dataset is accurate and useful for furt
 ### 1. Missing/Null Values
 
 First, I checked to ensure there were no missing values from the data.
-```
-
-```
 
 
 ### 2. Duplicates
