@@ -75,13 +75,12 @@ Education level scale.
 - EducationLevelID: Unique identifier for the education level.
 - EducationLevel: The level of education achieved, ranging from "No Formal Qualifications" to "Doctorate."
 
-## Data Cleaning
+## Exploratory Data Analysis (EDA)
 
-Data cleaning is essential to ensure the dataset is accurate and useful for further analysis.
+BeforeData cleaning is essential to ensure the dataset is accurate and useful for further analysis. I did not find any data that needed to be standardized, so I only needed to perform simple checks for null values and duplicates.
 
-### 1. Missing/Null Values
+### 1. Null Values
 
-First, I checked to ensure there were no missing values from the data.
 
 ### 2. Duplicates
 
