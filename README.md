@@ -72,7 +72,9 @@ In this analysis, I help the HR department with the following:
 
 ## Exploratory Data Analysis
 
-BeforeData cleaning is essential to ensure the dataset is accurate and useful for further analysis. I did not find any data that needed to be standardized, so I only needed to perform simple checks for null values and duplicates.
+### Data Cleaning
+
+
 
 ## Insights
 
