@@ -75,7 +75,7 @@ Education level scale.
 - EducationLevelID: Unique identifier for the education level.
 - EducationLevel: The level of education achieved, ranging from "No Formal Qualifications" to "Doctorate."
 
-## Exploratory Data Analysis (EDA)
+## Exploratory Data Analysis
 
 BeforeData cleaning is essential to ensure the dataset is accurate and useful for further analysis. I did not find any data that needed to be standardized, so I only needed to perform simple checks for null values and duplicates.
 
