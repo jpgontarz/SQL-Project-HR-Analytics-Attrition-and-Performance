@@ -7,7 +7,7 @@ This project demonstrates my SQL problem-solving skills, analyzing employee perf
 ## Project Structure
 
 - [About the Data](#about-the-data)
-- [Data Cleaning](#data-cleaning)
+- [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-(eda))
 - [Business Problems](#business-problems)
 - [Problems Solved](#problems-solved)
 - [Insights and Recommendations](#insights-and-recommendations)
