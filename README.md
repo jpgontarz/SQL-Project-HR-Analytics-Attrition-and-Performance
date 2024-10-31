@@ -1,13 +1,15 @@
 # SQL Project: HR-Analytics Employee Attrittion & Performance
 
+![](https://github.com/user-attachments/assets/717e02c3-ee79-4a05-812a-845bec6252d6)
+
 ## Overview
 
-_GreatPlaceToWork human resource personnel would like to improve performance, boost retention, and improve overall job satisfaction. However, they do not have good insights into the pertinent employee data. My goal is to analyze their data so I can provide recommendations to the HR department that will facilitate successful improvements._
+_GreatPlaceToWork human resource personnel would like to improve performance, boost retention, and improve overall job satisfaction. However, they do not have good insights into the pertinent employee data. My goal is to utilize SQL within MySQL Workbench, analyzing their data to provide recommendations to the HR department that will facilitate successful improvements._
 
 ## Project Structure
 
 - [About the Data](#about-the-data)
-- [Exploration Questions](#exploration-questions)
+- [Task](#task)
 - [Exploratory Data Analysis](#exploratory-data-analysis)
 - [Insights](#insights)
 - [Recommendations](#recommendations)
@@ -18,7 +20,7 @@ Original data can be found [here](https://www.kaggle.com/datasets/mahmoudemadabd
 
 The dataset includes five tables, capturing information regarding performance reviews, employee demographics, satisfaction levels, and ratings.
 
-## Exploration Questions
+## Task
 
 In this analysis, I help the HR department with the following:
 
@@ -72,10 +74,78 @@ In this analysis, I help the HR department with the following:
 
 ## Exploratory Data Analysis
 
-### Data Cleaning
+Before helping with the task, I first need to make sure the data is clean and ready to use in the analysis. As the EducationLevel, RatingLevel, and SatisfiedLevel tables are for reference, the main work uses the Employee and PerformanceRating tables.
+
+#### Null/Missing Values
+
+First, I checked for any missing values in the two most important fields: EmployeeID and PerformanceID.
+
+```sql
+-- Check for missing values in key fields --
+
+SELECT COUNT(*) AS MissingValues
+FROM Employee
+WHERE EmployeeID IS NULL;
+
+SELECT COUNT(*) AS MissingValues
+FROM PerformanceRating
+WHERE PerformanceID IS NULL
+	OR EmployeeID IS NULL;
+```
+
+Next, it is vital to make sure duplicate rows are removed, if any are found, again in the key fields.
+
+```sql
+-- Check for duplicate values in key fields --
+
+SELECT EmployeeID, COUNT(*)
+FROM Employee
+GROUP BY EmployeeID
+HAVING COUNT(*) > 1;
+
+SELECT PerformanceID, COUNT(*)
+FROM PerformanceRating
+GROUP BY PerformanceID
+HAVING COUNT(*) > 1;
+```
+
+In order to standardize the data, I decided to first change the measurement of the DistanceFromHome column from kilometers (KM) to miles (MI), and then change the name of the column to DistanceFromHome (MI).
+
+```sql
+-- Change DistanceFromHome (KM) measurement from kilometers (KM) to miles (MI); change column name to DistanceFromHome (MI) --
+
+UPDATE Employee
+SET `DistanceFromHome (KM)` = ROUND(`DistanceFromHome (KM)` * 0.621371, 0);
+
+ALTER TABLE Employee CHANGE COLUMN `DistanceFromHome (KM)` `DistanceFromHome (MI)` INT;
+```
+
+I noticed in the ReviewDate column in the PerformanceRating table is not in standard MySQL date format YYYY-MM-DD.
+
+```sql
+-- Change ReviewDate to standard date format --
+-- (due to Safe Updates being on in MySQL, I had to momentarily turn them off to perform this query) --
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE PerformanceRating
+SET ReviewDate = CASE
+    WHEN LENGTH(ReviewDate) = 10 THEN DATE_FORMAT(STR_TO_DATE(ReviewDate, '%m/%d/%Y'), '%Y-%m-%d')
+    ELSE DATE_FORMAT(STR_TO_DATE(ReviewDate, '%m/%d/%Y'), '%Y-%m-%d')
+END
+WHERE ReviewDate IS NOT NULL;
+
+SET SQL_SAFE_UPDATES = 1;
+```
 
 
 
 ## Insights
+
+### Question #1: Who are each department's top performers?
+
+
+
+**Question #1 Conclusion:** asdfjkl;
 
 ## Recommendations
