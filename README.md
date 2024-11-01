@@ -16,9 +16,9 @@ _GreatPlaceToWork human resource personnel would like to improve performance, bo
 
 ## About the Data
 
-Original data can be found [here](https://www.kaggle.com/datasets/mahmoudemadabdallah/hr-analytics-employee-attrition-and-performance/data?select=Employee.csv).
+Original data, along with an explanation of each column, can be found [here](https://www.kaggle.com/datasets/mahmoudemadabdallah/hr-analytics-employee-attrition-and-performance/data?select=Employee.csv).
 
-The dataset includes five tables, capturing information regarding performance reviews, employee demographics, satisfaction levels, and ratings.
+The dataset includes five tables, capturing performance reviews, employee demographics, satisfaction levels, and ratings within over 8,100 records and 40 columns.
 
 ## Task
 
@@ -26,7 +26,7 @@ In this analysis, I help the HR department with the following:
 
 ### Performance Enhancement
 
-1. Who are each department's top performers?
+[1.](#question-#1) Who are each department's top five performers for the last three years?
 
 2. Analyze the affect of training on performance.
 
@@ -78,14 +78,16 @@ Before helping with the task, I first need to make sure the data is clean and re
 
 #### Null/Missing Values
 
-First, I checked for any missing values in the two most important fields: EmployeeID and PerformanceID.
+First, I checked for any missing values in the two most important fields: EmployeeID and PerformanceID. None were found.
 
 ```sql
--- Check for missing values in key fields --
+-- Check for missing values in Employee table --
 
 SELECT COUNT(*) AS MissingValues
 FROM Employee
 WHERE EmployeeID IS NULL;
+
+-- Check for missing values in PerformanceRating table --
 
 SELECT COUNT(*) AS MissingValues
 FROM PerformanceRating
@@ -93,15 +95,17 @@ WHERE PerformanceID IS NULL
 	OR EmployeeID IS NULL;
 ```
 
-Next, it is vital to make sure duplicate rows are removed, if any are found, again in the key fields.
+Next, it is vital to make sure duplicate rows are removed, if any are found, again in the key fields. None were found.
 
 ```sql
--- Check for duplicate values in key fields --
+-- Check for duplicate values in Employee table --
 
 SELECT EmployeeID, COUNT(*)
 FROM Employee
 GROUP BY EmployeeID
 HAVING COUNT(*) > 1;
+
+-- Check for duplicate values in PerformanceRating table --
 
 SELECT PerformanceID, COUNT(*)
 FROM PerformanceRating
@@ -109,18 +113,22 @@ GROUP BY PerformanceID
 HAVING COUNT(*) > 1;
 ```
 
-In order to standardize the data, I decided to first change the measurement of the DistanceFromHome column from kilometers (KM) to miles (MI), and then change the name of the column to DistanceFromHome (MI).
+In order to standardize the data, I decided to first change the measurement of the DistanceFromHome column from kilometers (KM) to miles (MI), and then change the name of the column to DistanceFromHome (MI), since the data and myself are from the United States.
 
 ```sql
--- Change DistanceFromHome (KM) measurement from kilometers (KM) to miles (MI); change column name to DistanceFromHome (MI) --
+-- Change DistanceFromHome (KM) measurement from kilometers (KM) to miles (MI) --
 
 UPDATE Employee
 SET `DistanceFromHome (KM)` = ROUND(`DistanceFromHome (KM)` * 0.621371, 0);
 
+-- Change column name to DistanceFromHome (MI) --
+
 ALTER TABLE Employee CHANGE COLUMN `DistanceFromHome (KM)` `DistanceFromHome (MI)` INT;
 ```
 
-I noticed in the ReviewDate column in the PerformanceRating table is not in standard MySQL date format YYYY-MM-DD.
+![image](https://github.com/user-attachments/assets/6c3a6a03-c744-42e4-9406-6a2e3d686281)   ![image](https://github.com/user-attachments/assets/3f2ab5d2-d6d2-4253-aff2-83f6cfde3721)
+
+I noticed in the ReviewDate column in the PerformanceRating table is not in standard MySQL date format YYYY-MM-DD, so I quickly changed this as well.
 
 ```sql
 -- Change ReviewDate to standard date format --
@@ -137,14 +145,61 @@ WHERE ReviewDate IS NOT NULL;
 
 SET SQL_SAFE_UPDATES = 1;
 ```
+![image](https://github.com/user-attachments/assets/f656cbc0-6e4e-4488-a8e9-9da4a6b14e01)   ![image](https://github.com/user-attachments/assets/8bfa8a5e-c4f8-4ddf-9cbd-2deed717ae60)
 
-
+There were no further issues I found. With the data cleaning complete, I could start analyzing the data.
 
 ## Insights
 
 ### Question #1: Who are each department's top performers?
 
+Since I wanted to return the names of the top performers, I decided to create a view that combines the Employee and PerformanceRating tables.
 
+```sql
+-- Create View for Employee and PerformanceRating tables --
+
+CREATE VIEW EmployeePerformance AS
+SELECT 
+    e.EmployeeID, 
+    CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName, 
+    e.Gender, 
+    e.Age, 
+    e.Department, 
+    e.`DistanceFromHome (MI)`, 
+    e.State, 
+    e.Ethnicity, 
+    e.MaritalStatus, 
+    e.Salary, 
+    e.StockOptionLevel, 
+    e.OverTime, 
+    e.HireDate, 
+    e.Attrition, 
+    e.YearsAtCompany, 
+    e.YearsInMostRecentRole, 
+    e.YearsSinceLastPromotion, 
+    e.YearsWithCurrManager,
+    p.PerformanceID, 
+    p.ReviewDate, 
+    p.EnvironmentSatisfaction, 
+    p.JobSatisfaction, 
+    p.RelationshipSatisfaction, 
+    p.TrainingOpportunitiesWithinYear, 
+    p.TrainingOpportunitiesTaken, 
+    p.WorkLifeBalance, 
+    p.SelfRating, 
+    p.ManagerRating
+FROM Employee e
+LEFT JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID;
+```
+
+![image](https://github.com/user-attachments/assets/875bb457-19ff-45db-bff2-244ed6669de0)
+	![image](https://github.com/user-attachments/assets/f0122104-ea6a-456d-9f03-d4859e367c5a)
+
+Now that I had replaced the old PerformanceRating table, I could easily find the top performers based on the ManagerRating.
+
+```sql
+
+```
 
 **Question #1 Conclusion:** asdfjkl;
 
