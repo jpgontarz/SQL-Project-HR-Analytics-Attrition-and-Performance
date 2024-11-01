@@ -26,7 +26,7 @@ In this analysis, I help the HR department with the following:
 
 ### Performance Enhancement
 
-[1.](1.) Who are each department's top five performers for the last three years?
+1. Who are each department's top five performers for the last three years?
 
 2. Analyze the affect of training on performance.
 
@@ -151,7 +151,7 @@ There were no further issues I found. With the data cleaning complete, I could s
 
 ## Insights
 
-### 1. Who are each department's top five performers for the last three years?
+### Question #1: Who are each department's top five performers for the last three years?
 
 Since I wanted to return the names of the top performers, I decided to create a view that combines the Employee and PerformanceRating tables.
 
