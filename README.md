@@ -24,25 +24,25 @@ The dataset includes five tables, capturing performance reviews, employee demogr
 
 In this analysis, I help the HR department with the following:
 
-1. How many employees in each department are still with the company and have been there for 3 or more years?
+1. What is the average tenure for employees within each department?
 
-2. What is the average JobSatisfaction score for employees who have left versus those who remain?
+2. How many employees in each department are still working at the company?
 
-3. How does the attrition rate vary for employees who work overtime in each department?
+3. How does job satisfaction for employees compare with different tenure levels?
 
-4. Is there a connection between frequent business travel and lower scores in job satisfaction or work-life balance?
+4. What percentage of employees who work overtime have left the company?
 
-5. Which departments have the most consistent manager ratings, as indicated by the lowest variation in ManagerRating?
+5. Rank departments by average manager ratings, separated by business travel.
 
-6. Which employees show consistent improvement or decline in ManagerRating over their review dates?
+6. Is there a positive correlation between the number of training opportunities an employee has taken and their job satisfaction?
 
-7. What combination of demographics (department, age, years at the company) best aligns with high ManagerRating and JobSatisfaction scores?
+7. Identify the top three employees by their manager rating in each department.
 
-8. Does a longer tenure with the current manager correlate with higher job satisfaction or lower turnover rates?
+8. Categorize employees based on their distance from work and show average job satisfaction in each category.
 
-9. Are employees who complete more training opportunities given higher ManagerRating scores?
+9. Is there a relationship between the number of promotions and the years an employee has spent with their current manager?
 
-10. Does the time since an employee's last promotion correlate with attrition, particularly within specific departments?
+10. For each department, identify the percentage of employees who have left the company and had a job satisfaction score below 3.
 
 ## Exploratory Data Analysis
 
@@ -98,7 +98,13 @@ SET `DistanceFromHome (KM)` = ROUND(`DistanceFromHome (KM)` * 0.621371, 0);
 ALTER TABLE Employee CHANGE COLUMN `DistanceFromHome (KM)` `DistanceFromHome (MI)` INT;
 ```
 
-![image](https://github.com/user-attachments/assets/6c3a6a03-c744-42e4-9406-6a2e3d686281)   ![image](https://github.com/user-attachments/assets/3f2ab5d2-d6d2-4253-aff2-83f6cfde3721)
+![image](https://github.com/user-attachments/assets/6c3a6a03-c744-42e4-9406-6a2e3d686281)
+
+_Before measurement change: DistanceFromHome (KM)_
+
+![image](https://github.com/user-attachments/assets/3f2ab5d2-d6d2-4253-aff2-83f6cfde3721)
+
+_After measurement change: DistanceFromHome (MI)_
 
 I noticed in the ReviewDate column in the PerformanceRating table is not in standard MySQL date format YYYY-MM-DD, so I quickly changed this as well.
 
@@ -117,7 +123,13 @@ WHERE ReviewDate IS NOT NULL;
 
 SET SQL_SAFE_UPDATES = 1;
 ```
-![image](https://github.com/user-attachments/assets/f656cbc0-6e4e-4488-a8e9-9da4a6b14e01)   ![image](https://github.com/user-attachments/assets/8bfa8a5e-c4f8-4ddf-9cbd-2deed717ae60)
+![image](https://github.com/user-attachments/assets/f656cbc0-6e4e-4488-a8e9-9da4a6b14e01)
+
+_Before date format edit: mm-dd-YYYY_
+
+![image](https://github.com/user-attachments/assets/8bfa8a5e-c4f8-4ddf-9cbd-2deed717ae60)
+
+_After date format edit: YYYY-mm-dd_
 
 There were no further issues I found. With the data cleaning complete, I decided to create a View that combined the Employee and PerformanceRating tables in order for simpler analysis.
 
@@ -160,6 +172,79 @@ LEFT JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID;
 
 ## Insights
 
-### Question #1: 
+### Question #1: What is the average tenure for employees within each department?
+
+I found the average tenure for each department by using the ROUND, AVG, and GROUP BY functions. Since YearsAtCompany is already just a whole number, I decided to keep the average tenure as a whole number as well.
+
+```sql
+-- Average tenure by department --
+
+SELECT Department,
+	ROUND(AVG(YearsAtCompany), 2) AS AvgTenure_YRS
+FROM EmployeePerformance
+GROUP BY Department;
+```
+
+![image](https://github.com/user-attachments/assets/30cf6690-f908-4afc-9618-6690f34dea12)
+
+
+_Average tenure (in years) by department_
+
+The Sales department had the shortest overall tenure at nearly 5.4 years, HR tenure was next at 5.55 years, and Technology the longest at almost 5.7 years.
+
+### Question #2: How many employees in each department are still working at the company?
+
+To find the number of current employees, just simple COUNT, WHERE, and GROUP BY functions were needed.
+
+```sql
+-- Active Employees --
+
+SELECT Department,
+	COUNT(*) AS ActiveEmployees,
+	ROUND(COUNT(*) * 100 / (SELECT COUNT(*)
+				FROM EmployeePerformance
+				WHERE Attrition = 'No'), 0
+				) AS PercentageOfActive
+FROM EmployeePerformance
+WHERE Attrition = 'No'
+GROUP BY Department
+ORDER BY ActiveEmployees DESC;
+```
+
+![image](https://github.com/user-attachments/assets/9cfe6a89-cd36-4123-9de1-1b6630e3465c)
+
+_Active employees by department and percentage of total_
+
+The Technology department by far made up the most of the company's active employees with more than 3,100 employees, over two-thirds of the entire company. At not even half the tally was Sales at 1,332 employees (29%), with HR being the smallest department at 4% with just under 200 employees.
+
+### Question #3: How does job satisfaction for employees compare with different tenure levels?
+
+Next, I utilized the CASE function to find the average job satisfaction rating in three categories: employees who had worked less than three years, those in between three and five years, and those over five years.
+
+```sql
+-- Average job satisfaction by tenure category --
+
+SELECT 
+    CASE 
+        WHEN YearsAtCompany < 3 THEN '< 3 years'
+        WHEN YearsAtCompany BETWEEN 3 AND 5 THEN '3-5 years'
+        ELSE '> 5 years' 
+    END AS TenureCategory,
+    ROUND(AVG(JobSatisfaction), 4) AS AvgJobSatisfaction
+FROM EmployeePerformance
+GROUP BY TenureCategory
+ORDER BY AvgJobSatisfaction DESC;
+```
+
+Interestingly, the category with the highest average job satisfaction ratings were those working less than three years at nearly 3.45, following closely by the three to five year group and the more than five years category, both at almost 3.43.
+
+### Question #4: What percentage of employees who work overtime have left the company?
+
+Again using the CASE function, I found the percentage of overtime workers
+
+```sql
+
+```
+
 
 
