@@ -24,53 +24,25 @@ The dataset includes five tables, capturing performance reviews, employee demogr
 
 In this analysis, I help the HR department with the following:
 
-### Performance Enhancement
+1. How many employees in each department are still with the company and have been there for 3 or more years?
 
-1. Who are each department's top five performers for the last three years?
+2. What is the average JobSatisfaction score for employees who have left versus those who remain?
 
-2. Analyze the affect of training on performance.
+3. How does the attrition rate vary for employees who work overtime in each department?
 
-3. Is there a positive relationship between a good work-life balance and performance?
+4. Is there a connection between frequent business travel and lower scores in job satisfaction or work-life balance?
 
-4. Are there correlations/discrepancies with employee self-assessments and manager evaluations in a given department?
+5. Which departments have the most consistent manager ratings, as indicated by the lowest variation in ManagerRating?
 
-5. Does a higher job satisfaction rating align with improved performance metrics?
+6. Which employees show consistent improvement or decline in ManagerRating over their review dates?
 
-### Retention and Turnover Insights
+7. What combination of demographics (department, age, years at the company) best aligns with high ManagerRating and JobSatisfaction scores?
 
-6. Are there any trends between low job satisfaction and attrition rates, specifically across a department or demographic?
+8. Does a longer tenure with the current manager correlate with higher job satisfaction or lower turnover rates?
 
-7. Is there a relationship between overtime and turnover?
+9. Are employees who complete more training opportunities given higher ManagerRating scores?
 
-8. Does the distance from office seem to affect retention?
-
-9. How are low relationship satisfaction scores with managers associated with attrition, especially in any specific departments?
-
-10. Do employees who go longer without promotions have a higher tendency to leave?
-
-### Boosting Job Satisfaction
-
-11. Do employees who participate in more training opportunities report higher satisfaction in areas like work-life balance or job contentment?
-
-12. Examine if frequent business travel has any negative impact on job satisfaction, work-life balance, or relationships at work.
-
-13. How satisfied are employees who live further from the workplace than others?
-
-14. Are there notable trends in satisfaction scores by gender, age, marital status, and other demographics?
-
-15. How likely are employees who have been at the company longer to be satisfied with their job?
-
-16. Does stock options seem to affect employee satisfaction?
-
-### Managerial Effectiveness
-
-17. Determine if a longer tenure with the same manager correlates with better job performance and satisfaction scores.
-
-18. Do lower manager ratings contribute to higher attrition rates?
-
-19. Which managers facilitate more training opportunities than others, and does this affect their employees' satisfaction and performance?
-
-20. Examine if employees with longer relationships with their managers experience more frequent promotions.
+10. Does the time since an employee's last promotion correlate with attrition, particularly within specific departments?
 
 ## Exploratory Data Analysis
 
@@ -147,13 +119,7 @@ SET SQL_SAFE_UPDATES = 1;
 ```
 ![image](https://github.com/user-attachments/assets/f656cbc0-6e4e-4488-a8e9-9da4a6b14e01)   ![image](https://github.com/user-attachments/assets/8bfa8a5e-c4f8-4ddf-9cbd-2deed717ae60)
 
-There were no further issues I found. With the data cleaning complete, I could start analyzing the data.
-
-## Insights
-
-### Question #1: Who are each department's top five performers for the last three years?
-
-Since I wanted to return the names of the top performers, I decided to create a view that combines the Employee and PerformanceRating tables.
+There were no further issues I found. With the data cleaning complete, I decided to create a View that combined the Employee and PerformanceRating tables in order for simpler analysis.
 
 ```sql
 -- Create View for Employee and PerformanceRating tables --
@@ -192,15 +158,8 @@ FROM Employee e
 LEFT JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID;
 ```
 
-![image](https://github.com/user-attachments/assets/875bb457-19ff-45db-bff2-244ed6669de0)
-	![image](https://github.com/user-attachments/assets/f0122104-ea6a-456d-9f03-d4859e367c5a)
+## Insights
 
-Now that I had replaced the old PerformanceRating table, I could easily find the top performers based on the ManagerRating.
+### Question #1: 
 
-```sql
 
-```
-
-**Question #1 Conclusion:** asdfjkl;
-
-## Recommendations
