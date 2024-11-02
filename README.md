@@ -317,7 +317,9 @@ WITH RandomTop3Performers AS (
         p.ManagerRating,
         p.TrainingOpportunitiesTaken,
         ROW_NUMBER() OVER (PARTITION BY e.Department
-			ORDER BY p.ManagerRating, p.TrainingOpportunitiesTaken, RAND()) AS RowNum
+	    ORDER BY p.ManagerRating,
+		p.TrainingOpportunitiesTaken,
+                RAND()) AS RowNum
     FROM Employee e
     JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
     WHERE p.ManagerRating = 5
@@ -333,9 +335,3 @@ WHERE RowNum <= 3;
 ![image](https://github.com/user-attachments/assets/20ad3efc-d912-41be-b3b1-0137c610c1fb)
 
 _Random top three performers by department_
-
-8. Categorize employees based on their distance from work and show average job satisfaction in each category.
-
-9. Is there a relationship between the number of promotions and the years an employee has spent with their current manager?
-
-10. For each department, identify the percentage of employees who have left the company and had a job satisfaction score below 3.
