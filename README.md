@@ -285,7 +285,57 @@ Meanwhile, the highest average manager rating by travel type was No Travel at 3.
 
 ### Question #6: Is there a positive correlation between the number of training opportunities an employee has taken and their job satisfaction?
 
-I found the average job satisfaction rating and grouped them with the number of training opportunities employees had taken.
+Here, I found the average job satisfaction rating and grouped them with the number of training opportunities employees had taken.
 
 ```sql
+-- Average job satisfaction by training opportunities taken --
 
+SELECT TrainingOpportunitiesTaken,
+    ROUND(AVG(JobSatisfaction), 2) AS AvgJobSatisfaction
+FROM PerformanceRating
+GROUP BY TrainingOpportunitiesTaken
+ORDER BY TrainingOpportunitiesTaken DESC;
+```
+
+![image](https://github.com/user-attachments/assets/a46bc708-264c-44ac-abe7-37aebbee98ad)
+
+_Average job satisfaction rating by training opportunities taken_
+
+There seems to be a slight positive correlation between the amount of training opportunities employees take and their job satisfaction. Employees who took up three training opportunities boasted an average satisfaction rating of 3.48, those who had taken two and one both at 3.42, while employees who did not take any had an average of 3.44.
+
+### Question #7: Identify the top three employees by their manager rating in each department.
+
+While trying to write this query, I found that there were more than three employees in each department who had a five for manager rating. I decided to expand the criteria, where the employees not only had to have a manager rating of five but also had to have taken three training opportunities. Then, since there were slightly less results, I included a row number column that would randomly select only three employees who matched the criteria. The row numbers then would randomize every time the query was run.
+
+```sql
+-- Random top three employees by department, manager rating, and training opportunities taken --
+
+WITH RandomTop3Performers AS (
+    SELECT 
+        CONCAT(e.FirstName, ' ', e.LastName) AS FullName,
+        e.Department,
+        p.ManagerRating,
+        p.TrainingOpportunitiesTaken,
+        ROW_NUMBER() OVER (PARTITION BY e.Department
+			ORDER BY p.ManagerRating, p.TrainingOpportunitiesTaken, RAND()) AS RowNum
+    FROM Employee e
+    JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
+    WHERE p.ManagerRating = 5
+        AND p.TrainingOpportunitiesTaken = 3
+        AND e.Attrition = 'No'
+)
+SELECT FullName,
+    Department
+FROM RandomTop3Performers
+WHERE RowNum <= 3;
+```
+
+![image](https://github.com/user-attachments/assets/20ad3efc-d912-41be-b3b1-0137c610c1fb)
+
+_Random top three performers by department_
+
+8. Categorize employees based on their distance from work and show average job satisfaction in each category.
+
+9. Is there a relationship between the number of promotions and the years an employee has spent with their current manager?
+
+10. For each department, identify the percentage of employees who have left the company and had a job satisfaction score below 3.
