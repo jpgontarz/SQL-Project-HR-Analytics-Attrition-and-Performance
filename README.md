@@ -64,7 +64,7 @@ WHERE EmployeeID IS NULL;
 SELECT COUNT(*) AS MissingValues
 FROM PerformanceRating
 WHERE PerformanceID IS NULL
-	OR EmployeeID IS NULL;
+    OR EmployeeID IS NULL;
 ```
 
 Next, it is vital to make sure duplicate rows are removed, if any are found, again in the key fields. None were found.
@@ -95,7 +95,8 @@ SET `DistanceFromHome (KM)` = ROUND(`DistanceFromHome (KM)` * 0.621371, 0);
 
 -- Change column name to DistanceFromHome (MI) --
 
-ALTER TABLE Employee CHANGE COLUMN `DistanceFromHome (KM)` `DistanceFromHome (MI)` INT;
+ALTER TABLE Employee
+CHANGE COLUMN `DistanceFromHome (KM)` `DistanceFromHome (MI)` INT;
 ```
 
 ![image](https://github.com/user-attachments/assets/6c3a6a03-c744-42e4-9406-6a2e3d686281)
@@ -131,44 +132,7 @@ _Before date format edit: mm-dd-YYYY_
 
 _After date format edit: YYYY-mm-dd_
 
-There were no further issues I found. With the data cleaning complete, I decided to create a View that combined the Employee and PerformanceRating tables in order for simpler analysis.
-
-```sql
--- Create View for Employee and PerformanceRating tables --
-
-CREATE VIEW EmployeePerformance AS
-SELECT 
-    e.EmployeeID, 
-    CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName, 
-    e.Gender, 
-    e.Age, 
-    e.Department, 
-    e.`DistanceFromHome (MI)`, 
-    e.State, 
-    e.Ethnicity, 
-    e.MaritalStatus, 
-    e.Salary, 
-    e.StockOptionLevel, 
-    e.OverTime, 
-    e.HireDate, 
-    e.Attrition, 
-    e.YearsAtCompany, 
-    e.YearsInMostRecentRole, 
-    e.YearsSinceLastPromotion, 
-    e.YearsWithCurrManager,
-    p.PerformanceID, 
-    p.ReviewDate, 
-    p.EnvironmentSatisfaction, 
-    p.JobSatisfaction, 
-    p.RelationshipSatisfaction, 
-    p.TrainingOpportunitiesWithinYear, 
-    p.TrainingOpportunitiesTaken, 
-    p.WorkLifeBalance, 
-    p.SelfRating, 
-    p.ManagerRating
-FROM Employee e
-LEFT JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID;
-```
+There were no further issues I found.
 
 ## Insights
 
@@ -180,17 +144,17 @@ I found the average tenure for each department by using the ROUND, AVG, and GROU
 -- Average tenure by department --
 
 SELECT Department,
-	ROUND(AVG(YearsAtCompany), 2) AS AvgTenure_YRS
-FROM EmployeePerformance
-GROUP BY Department;
+    ROUND(AVG(YearsAtCompany), 2) AS AvgTenure_Years
+FROM Employee
+GROUP BY Department
+ORDER BY AvgTenure_Years;
 ```
 
-![image](https://github.com/user-attachments/assets/30cf6690-f908-4afc-9618-6690f34dea12)
-
+![image](https://github.com/user-attachments/assets/58629302-062f-4eae-97e0-7bdd64709dab)
 
 _Average tenure (in years) by department_
 
-The Sales department had the shortest overall tenure at nearly 5.4 years, HR tenure was next at 5.55 years, and Technology the longest at almost 5.7 years.
+The Technology department had the longest overall tenure at 4.61 years, with HR and Sales departments following slightly behind at 4.47 and 4.46 years, respectively.
 
 ### Question #2: How many employees in each department are still working at the company?
 
@@ -200,51 +164,128 @@ To find the number of current employees, just simple COUNT, WHERE, and GROUP BY 
 -- Active Employees --
 
 SELECT Department,
-	COUNT(*) AS ActiveEmployees,
-	ROUND(COUNT(*) * 100 / (SELECT COUNT(*)
-				FROM EmployeePerformance
-				WHERE Attrition = 'No'), 0
-				) AS PercentageOfActive
-FROM EmployeePerformance
+    COUNT(*) AS ActiveEmployees,
+    ROUND(COUNT(*) * 100 / (SELECT COUNT(*)
+			    FROM EmployeePerformance
+			    WHERE Attrition = 'No'), 0
+			    ) AS PercentageOfActive
+FROM Employee
 WHERE Attrition = 'No'
 GROUP BY Department
 ORDER BY ActiveEmployees DESC;
 ```
 
-![image](https://github.com/user-attachments/assets/9cfe6a89-cd36-4123-9de1-1b6630e3465c)
+![image](https://github.com/user-attachments/assets/8d081323-7275-412e-8688-bb0069320b2f)
 
 _Active employees by department and percentage of total_
 
-The Technology department by far made up the most of the company's active employees with more than 3,100 employees, over two-thirds of the entire company. At not even half the tally was Sales at 1,332 employees (29%), with HR being the smallest department at 4% with just under 200 employees.
+The Technology department by far made up the most of the company's active employees with 828 employees, over two-thirds of the entire company. At not even half the tally was Sales at 354 employees (29%), with HR being the smallest department at 4% with just 51 employees.
 
 ### Question #3: How does job satisfaction for employees compare with different tenure levels?
 
-Next, I utilized the CASE function to find the average job satisfaction rating in three categories: employees who had worked less than three years, those in between three and five years, and those over five years.
+Next, I utilized the CASE and JOIN functions to find the average job satisfaction rating in three categories: employees who had worked less than three years, those in between three and five years, and those over five years.
 
 ```sql
 -- Average job satisfaction by tenure category --
 
 SELECT 
     CASE 
-        WHEN YearsAtCompany < 3 THEN '< 3 years'
-        WHEN YearsAtCompany BETWEEN 3 AND 5 THEN '3-5 years'
+	WHEN e.YearsAtCompany < 3 THEN '< 3 years'
+        WHEN e.YearsAtCompany BETWEEN 3 AND 5 THEN '3-5 years'
         ELSE '> 5 years' 
     END AS TenureCategory,
-    ROUND(AVG(JobSatisfaction), 4) AS AvgJobSatisfaction
-FROM EmployeePerformance
+    ROUND(AVG(p.JobSatisfaction), 2) AS AvgJobSatisfaction
+FROM Employee e
+JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
 GROUP BY TenureCategory
 ORDER BY AvgJobSatisfaction DESC;
+
 ```
+
+![image](https://github.com/user-attachments/assets/23bfb5f3-11a8-4518-b518-b6cfa105db4e)
+
+_Average job satisfaction by tenure category_
 
 Interestingly, the category with the highest average job satisfaction ratings were those working less than three years at nearly 3.45, following closely by the three to five year group and the more than five years category, both at almost 3.43.
 
-### Question #4: What percentage of employees who work overtime have left the company?
+### Question #4: Examine how many employees who worked overtime have left the company versus those who did not work overtime.
 
-Again using the CASE function, I found the percentage of overtime workers
+Again using the CASE function, I found the percentage of overtime workers would did not work anymore.
 
 ```sql
-
+SELECT OverTime,
+    ROUND(COUNT(CASE
+		    WHEN Attrition = 'Yes'
+		    THEN EmployeeID
+		END) * 100.0 / COUNT(EmployeeID), 0) AS OverTimeAttritionPercentage
+FROM Employee
+GROUP BY OverTime
+ORDER BY OverTime DESC;
 ```
 
+![image](https://github.com/user-attachments/assets/bcad7c1f-635c-452a-b65c-4f4b22c78ec2)
 
+_Overtime attrition percentage_
+
+31% of overtime workers did not work for the company anymore, compared to only 10% of regular-houred employees.
+
+### Question #5: Rank departments by average manager ratings, separated by business travel.
+
+For this problem, I used the RANK, OVER(PARTITION BY), and JOIN functions to find and rank the average manager rating of each business travel type for each department then grouped the results by business travel type.
+
+```sql
+-- Average manager ratings by department and travel --
+
+SELECT e.Department,
+    e.BusinessTravel,
+    ROUND(AVG(p.ManagerRating), 2) AS AvgManagerRating,
+    RANK() OVER (PARTITION BY e.BusinessTravel
+		ORDER BY AVG(p.ManagerRating) DESC) AS DepartmentRank
+FROM Employee e
+JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
+GROUP BY Department,
+	BusinessTravel;
+```
+
+![image](https://github.com/user-attachments/assets/3a4571f3-447e-47b6-8c0d-e54b5e2ce6c1)
+
+_Average manager rating, ranked by department, separated by travel type_
+
+I also put together the total average ManagerRating by just Department, and then just by BusinessTravel.
+
+```sql
+SELECT e.Department,
+	ROUND(AVG(p.ManagerRating), 2) AS AvgManagerRating
+FROM Employee e
+JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
+GROUP BY Department
+ORDER BY AvgManagerRating DESC;
+```
+
+![image](https://github.com/user-attachments/assets/dead48f4-430e-4ad7-8217-3eb8b3cf4730)
+
+_Average manager rating by department_
+
+```sql
+SELECT e.BusinessTravel,
+	ROUND(AVG(p.ManagerRating), 2) AS AvgManagerRating
+FROM Employee e
+JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
+GROUP BY BusinessTravel
+ORDER BY AvgManagerRating DESC;
+```
+
+![image](https://github.com/user-attachments/assets/ebe7522f-7f31-41ec-ad48-a2f36e773b5f)
+
+_Average manager rating by travel type_
+
+Technology boasts the highest average manager rating at 3.49, followed by Sales at 3.45, and HR at 3.44.
+
+Meanwhile, the highest average manager rating by travel type was No Travel at 3.50, followed by Some Travel and Frequent Traveller both at 3.47.
+
+### Question #6: Is there a positive correlation between the number of training opportunities an employee has taken and their job satisfaction?
+
+I found the average job satisfaction rating and grouped them with the number of training opportunities employees had taken.
+
+```sql
 
