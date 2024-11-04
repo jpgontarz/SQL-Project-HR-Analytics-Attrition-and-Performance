@@ -1,6 +1,6 @@
 # SQL Project: HR-Analytics Employee Attrittion & Performance
 
-![](https://github.com/user-attachments/assets/717e02c3-ee79-4a05-812a-845bec6252d6)
+
 
 ## Overview
 
@@ -18,6 +18,8 @@ _GreatPlaceToWork human resource personnel would like to improve performance, bo
 Original data, along with an explanation of each column, can be found [here](https://www.kaggle.com/datasets/mahmoudemadabdallah/hr-analytics-employee-attrition-and-performance/data?select=Employee.csv).
 
 The dataset includes five tables, capturing performance reviews, employee demographics, satisfaction levels, and ratings within over 8,100 records and 40 columns.
+
+![](https://github.com/user-attachments/assets/717e02c3-ee79-4a05-812a-845bec6252d6)
 
 ## Task
 
