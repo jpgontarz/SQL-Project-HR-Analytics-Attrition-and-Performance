@@ -12,7 +12,6 @@ _GreatPlaceToWork human resource personnel would like to improve performance, bo
 - [Task](#task)
 - [Exploratory Data Analysis](#exploratory-data-analysis)
 - [Insights](#insights)
-- [Recommendations](#recommendations)
 
 ## About the Data
 
