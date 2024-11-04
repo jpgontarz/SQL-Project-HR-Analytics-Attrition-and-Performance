@@ -156,6 +156,8 @@ _Average tenure (in years) by department_
 
 The Technology department had the longest overall tenure at 4.61 years, with HR and Sales departments following slightly behind at 4.47 and 4.46 years, respectively.
 
+The company might provide additional professional development or mentorship tailored to those departments with shorter tenure.
+
 ### Question #2: How many employees in each department are still working at the company?
 
 To find the number of current employees, just simple COUNT, WHERE, and GROUP BY functions were needed.
@@ -180,6 +182,10 @@ ORDER BY ActiveEmployees DESC;
 _Active employees by department and percentage of total_
 
 The Technology department by far made up the most of the company's active employees with 828 employees, over two-thirds of the entire company. At not even half the tally was Sales at 354 employees (29%), with HR being the smallest department at 4% with just 51 employees.
+
+Because the HR department is so small compared to the other two departments, it may be worthwhile to evaluate its structure and the workload of its employees, as staffing adjustments may be necessary.
+
+The Technology department might need to be examined to check whether or not managerial attention for each employee has decreased or is decreasing job satisfaction.
 
 ### Question #3: How does job satisfaction for employees compare with different tenure levels?
 
@@ -208,6 +214,8 @@ _Average job satisfaction by tenure category_
 
 Interestingly, the category with the highest average job satisfaction ratings were those working less than three years at nearly 3.45, following closely by the three to five year group and the more than five years category, both at almost 3.43.
 
+Managers with long-tenured employees could schedule occassional check-ins with long-tenured employees, checking if these employees have any interesting suggestions or understanding of the factors affecting satisfaction.
+
 ### Question #4: Examine how many employees who worked overtime have left the company versus those who did not work overtime.
 
 Again using the CASE function, I found the percentage of overtime workers would did not work anymore.
@@ -227,6 +235,8 @@ ORDER BY OverTime DESC;
 _Overtime attrition percentage_
 
 31% of overtime workers did not work for the company anymore, compared to only 10% of regular-houred employees.
+
+Due to the high attrition rates for those who worked overtime, the company could investigate a restructuring of its overtime compensation incentives, allowing a more flexible work schedule, and limiting excessive overtime.
 
 ### Question #5: Rank departments by average manager ratings, separated by business travel.
 
@@ -282,6 +292,8 @@ Technology boasts the highest average manager rating at 3.49, followed by Sales 
 
 Meanwhile, the highest average manager rating by travel type was No Travel at 3.50, followed by Some Travel and Frequent Traveller both at 3.47.
 
+The departments with lower manager ratings may need more morale and productivity attention. Better support and communication could be needed for those with more travel requirements.
+
 ### Question #6: Is there a positive correlation between the number of training opportunities an employee has taken and their job satisfaction?
 
 Here, I found the average job satisfaction rating and grouped them with the number of training opportunities employees had taken.
@@ -301,6 +313,8 @@ ORDER BY TrainingOpportunitiesTaken DESC;
 _Average job satisfaction rating by training opportunities taken_
 
 There seems to be a slight positive correlation between the amount of training opportunities employees take and their job satisfaction. Employees who took up three training opportunities boasted an average satisfaction rating of 3.48, those who had taken two and one both at 3.42, while employees who did not take any had an average of 3.44.
+
+The company must be sure to make widespread access to training programs and to encourage employees to participate. Each team could discuss if training should be integrated with performance reviews.
 
 ### Question #7: Identify the top three employees by their manager rating in each department.
 
@@ -334,6 +348,8 @@ WHERE RowNum <= 3;
 ![image](https://github.com/user-attachments/assets/20ad3efc-d912-41be-b3b1-0137c610c1fb)
 
 _Random top three performers by department_
+
+Since each department can find which employees are performing well and participating in company activities, each can better establish which employees could be good mentors for other employees, which in turn could help performance. Each department could offer various incentives as well for these top performers, including bonuses, company-funded training, etc.
 
 ### Question #8: Categorize employees based on their distance from work and show average job satisfaction in each category.
 
@@ -376,6 +392,8 @@ _Employee count and average job satisfaction by distance category_
 
 The highest average job satisfaction belonged to the 5-20 mile group at 3.44, followed closely by the < 5 mile group at 3.43 and finally the 20+ mile group at 3.42.
 
+The company may explore more flexible work options for employees with longer commutes to see if satisfaction increases. Hybrid or fully remote work could help employees who live further away, while some local benefits and discounts could make living closer more attractive.
+
 ### Question #9: Is there a relationship between the number of promotions and the years an employee has spent with their current manager?
 
 For this question, I simply found the average years since last promotion for how long employees had their manager.
@@ -394,6 +412,8 @@ ORDER BY YearsWithCurrManager;
 _Average years since last promotion by years with current manager_
 
 On average, it seems the longer an employee is under their manager, the longer it takes for a promotion.
+
+It may help productivity and career development to have more regular development discussions between managers and longer-tenured employees. Long-serving workers need to be recognized for their work, and incentives need to be given to those employees who perform yet do not move teams, whether they want a promotion or not.
 
 ### Question #10: For each department, identify the percentage of employees who have left the company and had a job satisfaction score below 3.
 
@@ -423,3 +443,9 @@ _Low satisfaction attrition rate by department_
 
 The Sales department had the highest low satisfaction attrition rate with 2.08%, followed by HR at 1.89% and Technology at 1.66%.
 
+Sales might rethink its exit interviews to better understand the low satisfaction. Workload adjustments may need to be made to improve this.
+
+### Conclusion
+
+
+This analysis provided important insights into areas where GreatPlaceToWork can enhance employee experience, boost retention, and improve performance. Key findings included a high turnover rate among overtime workers, a slight decrease in satisfaction among long-tenured employees, and varying satisfaction levels based on commute distance. To address these issues, the company must take initiative and target bettering retention efforts, strengthening manager support, and developing their training programs. By captizaling on in-depth analysis to improve their HR practices, GreatPlaceToWork's workforce can beceome both more satisfied and engaged.
