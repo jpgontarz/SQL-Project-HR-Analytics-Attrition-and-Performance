@@ -213,10 +213,9 @@ Interestingly, the category with the highest average job satisfaction ratings we
 Again using the CASE function, I found the percentage of overtime workers would did not work anymore.
 
 ```sql
-SELECT OverTime,
+SELECT OverTime, 
     ROUND(COUNT(CASE
-		    WHEN Attrition = 'Yes'
-		    THEN EmployeeID
+		    WHEN Attrition = 'Yes' THEN EmployeeID
 		END) * 100.0 / COUNT(EmployeeID), 0) AS OverTimeAttritionPercentage
 FROM Employee
 GROUP BY OverTime
@@ -305,7 +304,7 @@ There seems to be a slight positive correlation between the amount of training o
 
 ### Question #7: Identify the top three employees by their manager rating in each department.
 
-While trying to write this query, I found that there were more than three employees in each department who had a five for manager rating. I decided to expand the criteria, where the employees not only had to have a manager rating of five but also had to have taken three training opportunities. Then, since there were slightly less results, I included a row number column that would randomly select only three employees who matched the criteria. The row numbers then would randomize every time the query was run.
+While trying to write this query, I found that there were more than three employees in each department who had a five for manager rating. I decided to expand the criteria, where the employees not only had to have a manager rating of five but also had to have taken three training opportunities. Then, since there were slightly less results, I included a row number column that would randomly select only three employees who matched the criteria. The row numbers then would randomize every time the query was run. Using a WITH function, I could find a random top three performers at any given time.
 
 ```sql
 -- Random top three employees by department, manager rating, and training opportunities taken --
@@ -335,3 +334,92 @@ WHERE RowNum <= 3;
 ![image](https://github.com/user-attachments/assets/20ad3efc-d912-41be-b3b1-0137c610c1fb)
 
 _Random top three performers by department_
+
+### Question #8: Categorize employees based on their distance from work and show average job satisfaction in each category.
+
+First, I needed to know what the furthest distance from home an employee commuted.
+
+```sql
+SELECT MAX(`DistanceFromHome (MI)`) AS LongestDistance
+FROM Employee;
+```
+
+_Longest commute_
+
+Now that I knew the furthest commute, I could categorize all of the distsances, ultimately deciding to divide them into the following: < 5 miles, 5-20 miles, and 20+ miles. Using a couple of CASE statements, I created distance categories, joined the corresponding average job satisfaction rating, and custom sorted the categories.
+
+```sql
+-- Employee count and average job satisfaction by distance category --
+
+SELECT
+    CASE
+	WHEN e.`DistanceFromHome (MI)` BETWEEN 1 AND 4 THEN '< 5 mi.'
+        WHEN e.`DistanceFromHome (MI)` BETWEEN 5 AND 19 THEN '5-20 mi.'
+        ELSE '20+ mi.'
+    END AS DistanceCategory,
+    COUNT(DISTINCT e.EmployeeID) AS EmployeeCount,
+    ROUND(AVG(p.JobSatisfaction), 2) AS AvgJobSatisfaction
+FROM Employee e
+JOIN PerformanceRating p ON e.EmployeeID = p.EmployeeID
+GROUP BY DistanceCategory
+ORDER BY
+    CASE
+	WHEN DistanceCategory = '< 5 mi.' THEN 1
+        WHEN DistanceCategory = '5-20 mi.' THEN 2
+        ELSE 3
+    END;
+```
+
+![image](https://github.com/user-attachments/assets/a5a90821-f08d-4996-8df0-6d234f1fcb3a)
+
+_Employee count and average job satisfaction by distance category_
+
+The highest average job satisfaction belonged to the 5-20 mile group at 3.44, followed closely by the < 5 mile group at 3.43 and finally the 20+ mile group at 3.42.
+
+### Question #9: Is there a relationship between the number of promotions and the years an employee has spent with their current manager?
+
+For this question, I simply found the average years since last promotion for how long employees had their manager.
+
+```sql
+-- Average years since last promotion by years with current manager --
+
+SELECT YearsWithCurrManager, ROUND(AVG(YearsSinceLastPromotion), 0) AS AvgYearsSinceLastPromotion
+FROM Employee
+GROUP BY YearsWithCurrManager
+ORDER BY YearsWithCurrManager;
+```
+
+![image](https://github.com/user-attachments/assets/f3a8b1ca-8d95-4035-b3a2-2e912b80a934)
+
+_Average years since last promotion by years with current manager_
+
+On average, it seems the longer an employee is under their manager, the longer it takes for a promotion.
+
+### Question #10: For each department, identify the percentage of employees who have left the company and had a job satisfaction score below 3.
+
+```sql
+-- Percentage of former employees who had low job satisfaction rating --
+
+SELECT e.Department,
+    ROUND(COUNT(CASE
+		    WHEN e.Attrition = 'Yes'
+			AND p.AvgJobSatisfaction < 3
+		    THEN 1
+		END) * 100.0 / COUNT(*), 2) AS LowSatisfactionAttritionRate
+FROM Employee e
+JOIN (
+    SELECT EmployeeID,
+	AVG(JobSatisfaction) AS AvgJobSatisfaction
+    FROM PerformanceRating
+    GROUP BY EmployeeID
+) p ON e.EmployeeID = p.EmployeeID
+GROUP BY e.Department
+ORDER BY LowSatisfactionAttritionRate DESC;
+```
+
+![image](https://github.com/user-attachments/assets/0715d96a-a232-4037-851f-f089e0501a94)
+
+_Low satisfaction attrition rate by department_
+
+The Sales department had the highest low satisfaction attrition rate with 2.08%, followed by HR at 1.89% and Technology at 1.66%.
+
