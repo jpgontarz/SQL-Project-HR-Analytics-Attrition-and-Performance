@@ -1,4 +1,4 @@
-# SQL Project: HR-Analytics Employee Attrittion & Performance
+# SQL Project: HR Analytics Employee Attrittion & Performance
 
 ![image](https://github.com/user-attachments/assets/2a621980-5f93-496e-b42e-79f35be0d4df)
 
