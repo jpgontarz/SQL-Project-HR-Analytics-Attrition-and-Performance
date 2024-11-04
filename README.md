@@ -213,7 +213,7 @@ _Average job satisfaction by tenure category_
 
 Interestingly, the category with the highest average job satisfaction ratings were those working less than three years at nearly 3.45, following closely by the three to five year group and the more than five years category, both at almost 3.43.
 
-Managers with long-tenured employees could schedule occassional check-ins with long-tenured employees, checking if these employees have any interesting suggestions or understanding of the factors affecting satisfaction.
+Managers with long-tenured employees could schedule occasional check-ins with long-tenured employees, checking if these employees have any interesting suggestions or understanding of the factors affecting satisfaction.
 
 ### Question #4: Examine how many employees who worked overtime have left the company versus those who did not work overtime.
 
