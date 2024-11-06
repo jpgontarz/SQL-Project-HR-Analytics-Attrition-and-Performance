@@ -11,8 +11,8 @@ _GreatPlaceToWork human resource personnel would like to improve performance, bo
 
 - [About the Data](#about-the-data)
 - [Task](#task)
-- [Exploratory Data Analysis](#exploratory-data-analysis)
-- [Insights](#insights)
+- [Data Cleaning](#data-cleaning)
+- [Exploratory Data Analysis and Insights](#exploratory-data-analysis-and-insights)
 
 ## About the Data
 
@@ -46,7 +46,7 @@ In this analysis, I help the HR department with the following:
 
 10. For each department, identify the percentage of employees who have left the company and had a job satisfaction score below 3.
 
-## Exploratory Data Analysis
+## Data Cleaning
 
 Before helping with the task, I first need to make sure the data is clean and ready to use in the analysis. As the EducationLevel, RatingLevel, and SatisfiedLevel tables are for reference, the main work uses the Employee and PerformanceRating tables.
 
@@ -136,7 +136,7 @@ _After date format edit: YYYY-mm-dd_
 
 There were no further issues I found.
 
-## Insights
+## Exploratory Data Analysis and Insights
 
 ### Question #1: What is the average tenure for employees within each department?
 
